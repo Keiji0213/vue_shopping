@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+
+<html lang="ja">
+
+	<head>
+		<meta charset="utf-8" />
+		<title>Vue Application</title>
+
+		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+		<link rel="stylesheet" href="css/style.css">
+		
+		<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+
+		<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+	</head>
+
+	<body class="container">
+
+		<section id="shopping-list-app">
+
+			<!-- ヘッダー部分 -->
+			<header>
+				<div class="alert alert-info">
+					<h1>ショッピング・リスト</h1>
+				</div>
+
+				<!-- 新しいアイテムの入力用テキスト･ボックス -->
+				<div class="form-group">
+					<input type="text" class="form-control" autofocus 
+						   placeholder="購入する商品は?"
+						   v-model="newItem"
+						   @keyup.enter="add">
+				</div>
+			</header>
+
+			<!-- アイテム表示部分 -->
+			<section v-show="items.length" v-cloak>
+
+				<!-- チェック･ボックス（すべてのアイテムにチェックを付ける） -->
+				<p>すべてチェック: <input id="toggle-all" type="checkbox" v-model="allDone"></p>
+
+				<!-- アイテムのリスト表示 -->
+				<ul class="shopping-list list-group">
+					
+					<!-- Vueのv-forディレクティブを使用してアイテムの数だけ繰り返し処理 -->
+					<li class="list-group-item" 
+					    v-for="item in filteredItems"
+						:key="item.id"
+						:class="{ completed: item.completed }">
+
+						<!-- 個々のアイテム表示部分 -->
+						<div class="view">
+							<input type="checkbox" class="chk-items" v-model="item.completed">
+							<label>{{ item.title }}</label>
+							<button class="btn btn-danger btn-sm" 
+							        @click="remove(item)">×</button>
+						</div>
+
+					</li>
+				</ul>
+			</section>
+			<br>
+			<!-- フッター部分 -->
+			<footer v-show="items.length" v-cloak>
+
+				<!-- 表示のフィルタリング設定 -->
+				<ul class="list-group list-group-horizontal">
+					
+					<!-- すべて -->
+					<li class="list-group-item" 
+					    :class="{ active: visibility == 'all' }">
+						<a href="#all">すべて</a>
+					</li>
+
+					<!-- 未購入 -->
+					<li class="list-group-item" 
+					    :class="{ active: visibility == 'active' }">
+						<a href="#active">未購入</a>
+					</li>
+
+					<!-- 購入済み -->
+					<li class="list-group-item" 
+					    :class="{ active: visibility == 'completed' }">
+						<a href="#completed">購入済</a>
+					</li>
+				</ul>
+				<br>
+				<!-- 完了済みアイテムをすべて削除するボタン -->
+				<button class="clear-completed btn btn-danger" 
+				        @click="removeCompleted" 
+				        v-show="items.length > remaining">
+					購入済みをすべて削除
+				</button>
+
+			</footer>
+		</section>
+
+		<script src="js/app.js"></script>
+
+	</body>
+</html>
